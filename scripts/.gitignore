@@ -1,0 +1,3 @@
+data/market_snapshot.csv
+__pycache__/
+*.pyc
