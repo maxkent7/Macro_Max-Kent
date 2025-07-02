@@ -7,7 +7,8 @@ try:
 except ImportError:  # fallback if pandas is not installed
     pd = None
 
-DB_PATH = os.path.join(os.path.dirname(__file__), 'data', 'market_data.db')
+DB_DIR = os.path.join(os.path.dirname(__file__), 'data')
+DB_PATH = os.path.join(DB_DIR, 'market_data.db')
 
 
 def load_data():

@@ -3,12 +3,14 @@ import sqlite3
 import requests
 from datetime import datetime
 
-API_KEY = os.getenv('ALPHAVANTAGE_API_KEY')
+API_KEY = "FNCR1BXVQXZ2Q8A0"
 BASE_URL = 'https://www.alphavantage.co/query'
-DB_PATH = os.path.join(os.path.dirname(__file__), 'data', 'market_data.db')
+DB_DIR = os.path.join(os.path.dirname(__file__), 'data')
+DB_PATH = os.path.join(DB_DIR, 'market_data.db')
 
 
 def create_db():
+    os.makedirs(DB_DIR, exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
     cur.execute(
@@ -74,7 +76,7 @@ def fetch_treasury_history():
     for item in data:
         d = item.get('date')
         if d and d >= '2001-01-01':
-            result[d] = float(item.get('value'))
+            result[d] = item.get('value')
     return result
 
 
