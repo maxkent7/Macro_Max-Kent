@@ -3,7 +3,9 @@ import sqlite3
 import requests
 from datetime import date
 
-API_KEY = "FNCR1BXVQXZ2Q8A0"
+API_KEY = os.getenv("ALPHAVANTAGE_API_KEY")
+if not API_KEY:
+    raise SystemExit("ALPHAVANTAGE_API_KEY environment variable not set")
 BASE_URL = 'https://www.alphavantage.co/query'
 DB_DIR = os.path.join(os.path.dirname(__file__), 'data')
 DB_PATH = os.path.join(DB_DIR, 'market_data.db')
