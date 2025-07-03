@@ -1,0 +1,6 @@
+# Environment variables
+.env
+scripts/.env
+
+# Local database
+scripts/data/market_data.db
