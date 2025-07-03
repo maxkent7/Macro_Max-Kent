@@ -2,6 +2,9 @@ import os
 import sqlite3
 import requests
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 API_KEY = os.getenv("ALPHAVANTAGE_API_KEY")
 if not API_KEY:
