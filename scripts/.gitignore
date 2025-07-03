@@ -1,4 +1,0 @@
-.env
-scripts/data/market_data.db
-__pycache__/
-*.pyc
