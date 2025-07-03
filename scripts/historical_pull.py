@@ -75,8 +75,13 @@ def fetch_treasury_history():
     result = {}
     for item in data:
         d = item.get('date')
-        if d and d >= '2001-01-01':
-            result[d] = item.get('value')
+        if not d or d < '2001-01-01':
+            continue
+        val = item.get('value')
+        try:
+            result[d] = float(val)
+        except (TypeError, ValueError):
+            continue
     return result
 
 
