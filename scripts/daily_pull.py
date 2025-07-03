@@ -21,8 +21,8 @@ def create_db():
             sp500 REAL,
             treasury REAL
         )
-        """
-    )
+        """      
+    ) # the section goes and looks for the SQL database. 
     conn.commit()
     conn.close()
 
@@ -42,7 +42,7 @@ def fetch_fx_today():
 
 def fetch_sp500_today():
     params = {
-        'function': 'TIME_SERIES_DAILY_ADJUSTED',
+        'function': 'TIME_SERIES_DAILY',
         'symbol': 'SPY',
         'outputsize': 'compact',
         'apikey': API_KEY,

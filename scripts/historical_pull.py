@@ -47,7 +47,7 @@ def fetch_fx_history():
 
 def fetch_sp500_history():
     params = {
-        'function': 'TIME_SERIES_DAILY_ADJUSTED',
+        'function': 'TIME_SERIES_DAILY',
         'symbol': 'SPY',
         'outputsize': 'full',
         'apikey': API_KEY,
@@ -109,6 +109,12 @@ def main():
     if fx:
         latest_date = max(fx)
         print(f"EUR/USD on {latest_date}: {fx[latest_date]}")
+    if spx: 
+        latest_date = max(spx)   
+        print(f"SP500 on {latest_date}: {spx[latest_date]}")
+    if tsy: 
+        latest_date = max(tsy)       
+        print(f"10Year on {latest_date}: {tsy[latest_date]}")
     print('API ran ok')
 
 
