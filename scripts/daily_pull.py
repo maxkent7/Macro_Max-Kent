@@ -24,12 +24,22 @@ def create_db():
             date TEXT PRIMARY KEY,
             eurusd REAL,
             sp500 REAL,
-            treasury REAL
+            treasury REAL,
+            gold REAL
         )
         """      
     ) # the section goes and looks for the SQL database. 
     conn.commit()
     conn.close()
+
+
+def ensure_column(conn, column_name):
+    cur = conn.cursor()
+    cur.execute("PRAGMA table_info(market_data)")
+    existing_columns = {row[1] for row in cur.fetchall()}
+    if column_name not in existing_columns:
+        cur.execute(f"ALTER TABLE market_data ADD COLUMN {column_name} REAL")
+        conn.commit()
 
 
 def fetch_fx_today():
@@ -61,6 +71,22 @@ def fetch_sp500_today():
     return float(data[latest_date]['4. close'])
 
 
+def fetch_gold_today():
+    params = {
+        'function': 'TIME_SERIES_DAILY',
+        'symbol': 'GLD',
+        'outputsize': 'compact',
+        'apikey': API_KEY,
+    }
+    resp = requests.get(BASE_URL, params=params, timeout=10)
+    resp.raise_for_status()
+    data = resp.json().get('Time Series (Daily)', {})
+    if not data:
+        return None
+    latest_date = sorted(data.keys())[-1]
+    return float(data[latest_date]['4. close'])
+
+
 def fetch_treasury_today():
     params = {
         'function': 'TREASURY_YIELD',
@@ -76,13 +102,17 @@ def fetch_treasury_today():
     return float(data[0]['value'])
 
 
-def update_db(fx, spx, tsy):
+def update_db(fx, spx, gold, tsy):
     conn = sqlite3.connect(DB_PATH)
+    ensure_column(conn, 'gold')
     cur = conn.cursor()
     d = date.today().isoformat()
     cur.execute(
-        'INSERT OR REPLACE INTO market_data (date, eurusd, sp500, treasury) VALUES (?, ?, ?, ?)',
-        (d, fx, spx, tsy),
+        """
+        INSERT OR REPLACE INTO market_data (date, eurusd, sp500, gold, treasury)
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (d, fx, spx, gold, tsy),
     )
     conn.commit()
     conn.close()
@@ -94,8 +124,9 @@ def main():
     create_db()
     fx = fetch_fx_today()
     spx = fetch_sp500_today()
+    gold = fetch_gold_today()
     tsy = fetch_treasury_today()
-    update_db(fx, spx, tsy)
+    update_db(fx, spx, gold, tsy)
     print(f"EUR/USD today: {fx}")
     print('API ran ok')
 

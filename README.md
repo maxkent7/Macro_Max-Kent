@@ -26,3 +26,13 @@ python scripts/daily_pull.py
 ```
 
 The scripts automatically load the `.env` file using `python-dotenv`.
+
+## New analysis
+
+The data pull scripts now also capture gold prices (via the GLD ETF). After running
+the pull, you can explore the relationship between the US 10Y Treasury yield and gold
+with:
+
+```bash
+python scripts/treasury_gold_analysis.py
+```
